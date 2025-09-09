@@ -130,6 +130,8 @@ callbacks.Register("CreateMove", function(userCmd)
     local localViewOffset = localPlayer:GetPropFloat("m_vecViewOffset[2]")
     local localView = localPlayer:GetAbsOrigin() + Vector3(0, 0, localViewOffset)
 
+    table.insert(hitboxes, localView)
+
     for hitboxId, hitboxData in ipairs(closestPlayer:GetHitboxes()) do
         -- i think 1 is always head?
         if hitboxId == 1 and not allowHeadHitbox then
@@ -167,7 +169,7 @@ callbacks.Register("CreateMove", function(userCmd)
         end
 
         local traceResult = engine.TraceLine(localView, hitboxPoint, MASK_SHOT)
-        if traceResult.hitbox == nil then
+        if traceResult.entity == nil or traceResult.entity ~= closestPlayer then
             goto skipTrace
         end
 
